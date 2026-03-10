@@ -63,18 +63,13 @@ public class Player {
 
     // MODIFIES: this
     // EFFECTS: adds pip or power pip to pips if pips < MAX_PIPS
-    public void addPip() {
-        if (pips >= MAX_PIPS) {
+    public void addPips(int numPips) {
+        if (pips == Player.MAX_PIPS) {
             return;
+        } else if (pips + numPips > Player.MAX_PIPS) {
+            pips = Player.MAX_PIPS;
         }
-
-        double powerPip = calculator.calculatePowerPipConversionRate(stats.getStat("power pip", null));
-        double randomPowerPip = Math.random();
-        if (randomPowerPip < powerPip) {
-            pips = Math.min(pips + 2, MAX_PIPS);
-        } else {
-            pips++;
-        }
+        pips += numPips;
     }
 
     // MODIFIES: this
@@ -270,6 +265,10 @@ public class Player {
 
     public int getPips() {
         return pips;
+    }
+
+    public double getPowerPipConversionRate() {
+        return calculator.calculatePowerPipConversionRate(stats.getStat("power pip", null));
     }
 
     public HashMap<String, ArrayList<Integer>> getShields() {

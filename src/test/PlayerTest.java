@@ -59,25 +59,20 @@ public class PlayerTest {
 
     @Test
     void testAddPipFull() {
-        for (int i = 0; i < Player.MAX_PIPS + 1; i++) {
-            player.addPip();
-        }
+        player.addPips(Player.MAX_PIPS);
         assertEquals(Player.MAX_PIPS, player.getPips());
     }
 
     @Test
     void testAddPip() {
         assertEquals(0, player.getPips());
-        player.addPip();
+        player.addPips(1);
         assertEquals(1, player.getPips());
     }
 
     @Test
     void testAddPowerPip() {
-        hat2.addStatBoost(new StatBoost(100, null, "power pip"));
-        player.getPlayerGear().setHat(hat2);
-        assertEquals(0, player.getPips());
-        player.addPip();
+        player.addPips(2);
         assertEquals(2, player.getPips());
     }
 
@@ -180,6 +175,11 @@ public class PlayerTest {
     }
 
     @Test
+    void testCastSpellNoEnemies() {
+        
+    }
+
+    @Test
     void testCastSpellOneEnemyNoAoe() {
         enemy1.getPlayerGear().setHat(hat1);
         player.getPlayerGear().setHat(hat2);
@@ -187,9 +187,8 @@ public class PlayerTest {
         player.addEnemy(enemy1);
         player.addSpell(spell1);
 
-        while (player.getPips() < Player.MAX_PIPS) {
-            player.addPip();
-        }
+        player.addPips(Player.MAX_PIPS);
+        
         assertEquals(14, player.getPips());
         player.updateHand(null);
         player.castSpell(spell1);
@@ -222,9 +221,7 @@ public class PlayerTest {
         player.addSpell(spell1);
         assertEquals(2, player.getEnemies().size());
 
-        while (player.getPips() < Player.MAX_PIPS) {
-            player.addPip();
-        }
+        player.addPips(Player.MAX_PIPS);
         assertEquals(14, player.getPips());
         player.updateHand(null);
         player.castSpell(spell1);
@@ -256,9 +253,7 @@ public class PlayerTest {
         player.addEnemy(enemy1);
         player.addSpell(spell1);
 
-        while (player.getPips() < Player.MAX_PIPS) {
-            player.addPip();
-        }
+        player.addPips(Player.MAX_PIPS);
         assertEquals(14, player.getPips());
         player.updateHand(null);
         player.castSpell(spell1);
@@ -283,9 +278,7 @@ public class PlayerTest {
         Spell lifeShield = new Spell("life shield", "life", 0, 0, 75, 0, 0, 0, 0, false);
         enemy1.addSpell(lifeShield);
 
-        while (player.getPips() < Player.MAX_PIPS) {
-            player.addPip();
-        }
+        player.addPips(Player.MAX_PIPS);
         assertEquals(14, player.getPips());
 
         player.updateHand(null);

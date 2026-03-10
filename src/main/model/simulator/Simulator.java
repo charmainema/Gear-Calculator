@@ -23,4 +23,20 @@ public class Simulator {
         // TODO
         return false;
     }
+
+    // EFFECTS: updates pips of player
+    private void updatePips(Player player) {
+        if (player.getPips() == Player.MAX_PIPS) {
+            return;
+        }
+
+        double powerPipRate = player.getPowerPipConversionRate();
+        double randomPowerPipRate = Math.random();
+
+        if (randomPowerPipRate < powerPipRate) {
+            player.addPips(2);
+        } else {
+            player.addPips(1);
+        }
+    }
 }
