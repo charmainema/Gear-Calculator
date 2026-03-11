@@ -22,14 +22,12 @@ public class Player {
     private ArrayList<Player> enemies;
 
     private GearCalculator calculator;
-    private Simulator sim;
 
     // EFFECTS: constructs a player with initial level, health, and mana, and empty
     // stats, gear, spells, hand, shields,
     // and wards, and 1 pip
-    public Player(int level, int health, int mana, Simulator sim) {
+    public Player(int level, int health, int mana) {
         this.level = level;
-        this.sim = sim;
         stats = new PlayerStats(health, mana);
         spells = new ArrayList<>();
         currentHand = new ArrayList<>();
@@ -242,6 +240,10 @@ public class Player {
             return (double) wards.get(school).remove(0) / 100;
         }
         return 0;
+    }
+
+    public void updateStats(String type, String school, int boost) {
+        stats.updateStats(type, school, boost);
     }
 
     public int getLevel() {

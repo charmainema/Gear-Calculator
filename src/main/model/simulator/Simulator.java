@@ -2,6 +2,7 @@ package main.model.simulator;
 
 import java.util.HashMap;
 
+import main.model.GearItem;
 import main.model.simulator.player.Player;
 import main.model.simulator.player.PlayerGear;
 
@@ -11,17 +12,17 @@ public class Simulator {
     private PlayerGear gear;
 
     public Simulator(int level, int health, int mana) {
-        mainPlayer = new Player(level, health, mana, this);
+        mainPlayer = new Player(level, health, mana);
         gear = new PlayerGear(mainPlayer);
     }
 
     // EFFECTS: returns true if total accuracy (from spell + player) expressed as
     // percentage < random decimal in range [0, 1], or
     // if total accuracy == 0
-    public boolean fizzle(Player player, Spell spell) {
+    // randomCast is a random double in range [0, 1]
+    public boolean fizzle(Player player, Spell spell, double randomCast) {
         double accuracy = (double) (spell.getAccuracy()
-                + player.getPlayerStats().getStat("accuracy", spell.getSchool()) / 100);
-        double randomCast = Math.random();
+                + player.getPlayerStats().getStat("accuracy", spell.getSchool())) / 100.0;
         return accuracy < randomCast || accuracy == 0;
     }
 
@@ -52,6 +53,12 @@ public class Simulator {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets gear item for mainPlayer if it exists in gearItems
+    public void setGear(HashMap<String, GearItem> gearItems) {
+        // TODO
+    }
+
     // EFFECTS: adds enemy to player
     public void addEnemy() {
         // TODO
@@ -68,5 +75,13 @@ public class Simulator {
     private HashMap<String, Double> simulate() {
         // TODO
         return new HashMap<>();
+    }
+
+    public PlayerGear getGear() {
+        return gear;
+    }
+
+    public Player getPlayer() {
+        return mainPlayer;
     }
 }

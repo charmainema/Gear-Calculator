@@ -21,9 +21,9 @@ public class PlayerTest {
 
     @BeforeEach
     void runBefore() {
-        player = new Player(100, 4000, 1000, null);
-        enemy1 = new Player(100, 3000, 1500, null);
-        enemy2 = new Player(90, 2000, 1000, null);
+        player = new Player(100, 4000, 1000);
+        enemy1 = new Player(100, 3000, 1500);
+        enemy2 = new Player(90, 2000, 1000);
         spell1 = new Spell("spell1", "life", 300, 100, 70, 50, 5, 10, 100, true);
         spell2 = new Spell("spell2", "death", 1000, 0, 0, 65, 7, 10, 100, false);
     }
