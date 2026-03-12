@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import main.model.GearCalculator;
-import main.model.simulator.Simulator;
 import main.model.simulator.Spell;
 
 public class Player {
