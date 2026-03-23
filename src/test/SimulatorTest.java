@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,5 +94,21 @@ public class SimulatorTest {
         sim.addEnemy(enemy);
         assertEquals(1, sim.getMainPlayer().getEnemies().size());
         assertEquals(enemy, sim.getMainPlayer().getEnemies().get(0));
+    }
+
+    @Test
+    void testSimulate() {
+        Player enemy = new Player(100, 10000, 10);
+        sim.addEnemy(enemy);
+        sim.getMainPlayer().addSpell(new Spell("S'more machine", "fire", 1110, 0, 0, 0, 1, 0, 100, false));
+        enemy.addSpell(new Spell("weak spell", "ice", 10, 0, 0, 0, 1, 0, 100, false));
+        
+        HashMap<String, Double> battleStats = sim.simulate();
+        assertEquals(1110.0, battleStats.get("max damage"));
+        assertEquals(1110.0, battleStats.get("total damage"));
+        assertEquals(1.0, battleStats.get("total rounds"));
+        assertEquals(10, battleStats.get("damage received"));
+        assertEquals(0, battleStats.get("total healed"));
+        assertEquals(0, battleStats.get("total blocked"));
     }
 }

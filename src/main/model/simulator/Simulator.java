@@ -68,14 +68,19 @@ public class Simulator {
     }
 
     // EFFECTS: simulates 1 round of battle, updating summary stats
+    // 1. adds pip/power pip to all of main player and enemies
+    // 2. main player casts random spell from deck on first enemy in list of enemies
+    // 3. enemies cast random spell from deck on main player
+    // 4. update battleStats
     private void simulateRound(HashMap<String, Double> battleStats) {
         // TODO
+
     }
 
     // EFFECTS: simulates battle until either mainPlayer dies, or all of
     // mainPlayer's enemies die, returns battle summary stats such as total damage
     // dealt, total damage received, num rounds, etc.
-    private HashMap<String, Double> simulate() {
+    public HashMap<String, Double> simulate() {
         // TODO
         return new HashMap<>();
     }
