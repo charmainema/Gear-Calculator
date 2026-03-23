@@ -147,13 +147,15 @@ public class Player {
     // the gear calculator is used to calculate boost rates for outgoing damage, and
     // fizzle/cast chance
     // - deducts spell's required mana and pips from player
-    public void castSpell(Spell spell) {
+    public HashMap<String, Double> castSpell(Spell spell) {
+        HashMap<String, Double> battleStats = new HashMap<>();
+
         if (spell.getAoe() == true) {
             for (Player enemy : enemies) {
-                doDamage(spell, enemy);
+                battleStats.put("damage", battleStats.getOrDefault("damage", 0.0) + (double) doDamage(spell, enemy));
             }
         } else {
-            doDamage(spell, enemies.get(0));
+            battleStats.put("damage", (double) doDamage(spell, enemies.get(enemies.size() - 1)));
         }
 
         updateHand(spell);
@@ -161,6 +163,15 @@ public class Player {
         stats.updateStats("health", null, spell.getHealing());
         updateWardsAndShields(spell);
         pips -= spell.getRequiredPips();
+
+        battleStats.put("healing", (double) spell.getHealing());
+        return battleStats;
+    }
+
+    // EFFECTS: casts a random spell from spells, return cast stats
+    public HashMap<String, Double> castRandom() {
+        int random = (int) (Math.random() * spells.size());
+        return castSpell(spells.get(random));
     }
 
     // MODIFIES: this
@@ -179,9 +190,10 @@ public class Player {
     // MODIFIES: this
     // EFFECTS: calculates total damage output using calculator, and deducts health
     // from enemy
-    private void doDamage(Spell spell, Player enemy) {
+    // RETURNS: total damage dealt
+    private int doDamage(Spell spell, Player enemy) {
         if (spell.getDamage() == 0) {
-            return;
+            return 0;
         }
 
         String spellSchool = spell.getSchool();
@@ -197,6 +209,8 @@ public class Player {
         int totalDamage = Math.max((int) (critMultiplier * boostedDamage), 0);
 
         enemy.getPlayerStats().updateStats("health", null, totalDamage * -1);
+
+        return totalDamage;
     }
 
     // EFFECTS: returns player's pierce - enemy's shield - enemy's resist
@@ -225,7 +239,8 @@ public class Player {
         }
     }
 
-    // EFFECTS: returns percentage of damage deflected by first shield in shields associated with school
+    // EFFECTS: returns percentage of damage deflected by first shield in shields
+    // associated with school
     public int getShieldFactor(String school) {
         if (shields.containsKey(school) && shields.get(school).size() > 0) {
             return shields.get(school).remove(0);
@@ -233,7 +248,8 @@ public class Player {
         return 0;
     }
 
-    // EFFECTS: returns percentage of damage boosted by first ward in wards associated with school
+    // EFFECTS: returns percentage of damage boosted by first ward in wards
+    // associated with school
     public double getWardFactor(String school) {
         if (wards.containsKey(school) && wards.get(school).size() > 0) {
             return (double) wards.get(school).remove(0) / 100;

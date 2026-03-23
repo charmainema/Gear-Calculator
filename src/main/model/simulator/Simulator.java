@@ -62,10 +62,48 @@ public class Simulator {
         }
     }
 
-    // EFFECTS: adds enemy to player
+    // EFFECTS: adds enemy to mainPlayer, and adds mainPlayer as and enemy
+    // to enemy
     public void addEnemy(Player enemy) {
         mainPlayer.addEnemy(enemy);
+        enemy.addEnemy(mainPlayer);
     }
+
+    // MODIFIES: this
+    // EFFECTS: adds pip/power pip to all enemies and main player
+    private void pipAll() {
+        updatePips(mainPlayer);
+
+        for (Player enemy : mainPlayer.getEnemies()) {
+            updatePips(enemy);
+        }
+    }
+
+
+    // EFFECTS: mainPlayer casts a random spell, updating battleStats
+    private void castMainPlayer (HashMap<String, Double> battleStats) {
+        HashMap<String, Double> playerCastStats = mainPlayer.castRandom();
+        double playerDamage = playerCastStats.get("damage");
+        double playerHealing = playerCastStats.get("healing");
+
+        battleStats.put("total healing", battleStats.getOrDefault("total healing", 0.0) + playerHealing);
+        battleStats.put("total damage", battleStats.getOrDefault("total damage", 0.0) + playerDamage);
+
+        if (battleStats.get("max damage") == null || battleStats.get("max damage") < playerDamage) {
+            battleStats.put("max damage", playerDamage);
+        }
+    }
+
+
+    // EFFECTS: all enemies and main player cast a random spell from their deck,
+    // update battleStats
+    private void castEnemies(HashMap<String, Double> battleStats) {
+        for (Player enemy : mainPlayer.getEnemies()) {
+            double enemyDamage = enemy.castRandom().get("damage");
+            battleStats.put("damage received", battleStats.getOrDefault("damage received", 0.0) + enemyDamage);
+        }
+    }
+
 
     // EFFECTS: simulates 1 round of battle, updating summary stats
     // 1. adds pip/power pip to all of main player and enemies
@@ -73,16 +111,29 @@ public class Simulator {
     // 3. enemies cast random spell from deck on main player
     // 4. update battleStats
     private void simulateRound(HashMap<String, Double> battleStats) {
-        // TODO
+        pipAll();
+        castMainPlayer(battleStats);
+        castEnemies(battleStats);
+    }
 
+    private void initBattleStats(HashMap<String, Double> battleStats) {
+        battleStats.put("max damage", 0.0);
+        battleStats.put("total damage", 0.0);
+        battleStats.put("total rounds", 1.0);
+        battleStats.put("damage received", 0.0);
+        battleStats.put("total healing", 0.0);
+        battleStats.put("total blocked", 0.0);
     }
 
     // EFFECTS: simulates battle until either mainPlayer dies, or all of
     // mainPlayer's enemies die, returns battle summary stats such as total damage
     // dealt, total damage received, num rounds, etc.
     public HashMap<String, Double> simulate() {
-        // TODO
-        return new HashMap<>();
+        // TODO: simulate rounds while player isn't dead or player still has enemies
+        HashMap<String, Double> battleStats = new HashMap<>();
+        initBattleStats(battleStats);
+        simulateRound(battleStats);
+        return battleStats;
     }
 
     public PlayerGear getGear() {

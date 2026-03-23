@@ -92,8 +92,12 @@ public class SimulatorTest {
     void testAddEnemy() {
         Player enemy = new Player(100, 10, 10);
         sim.addEnemy(enemy);
+
         assertEquals(1, sim.getMainPlayer().getEnemies().size());
         assertEquals(enemy, sim.getMainPlayer().getEnemies().get(0));
+        
+        assertEquals(1, enemy.getEnemies().size());
+        assertEquals(sim.getMainPlayer(), enemy.getEnemies().get(0));
     }
 
     @Test
@@ -108,7 +112,7 @@ public class SimulatorTest {
         assertEquals(1110.0, battleStats.get("total damage"));
         assertEquals(1.0, battleStats.get("total rounds"));
         assertEquals(10, battleStats.get("damage received"));
-        assertEquals(0, battleStats.get("total healed"));
+        assertEquals(0, battleStats.get("total healing"));
         assertEquals(0, battleStats.get("total blocked"));
     }
 }

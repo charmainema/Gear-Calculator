@@ -165,11 +165,6 @@ public class PlayerTest {
     }
 
     @Test
-    void testCastSpellNoEnemies() {
-        
-    }
-
-    @Test
     void testCastSpellOneEnemyNoAoe() {
         enemy1.getPlayerStats().updateStats("resist", "life", 10);
         player.getPlayerStats().updateStats("pierce", "life", 50);
@@ -181,11 +176,14 @@ public class PlayerTest {
         
         assertEquals(14, player.getPips());
         player.updateHand(null);
-        player.castSpell(spell1);
+        HashMap<String, Double> battleStats = player.castSpell(spell1);
 
         HashMap<String, ArrayList<Integer>> shields = player.getShields();
         HashMap<String, ArrayList<Integer>> wards = player.getWards();
 
+        assertEquals(420, battleStats.get("damage"));
+        assertEquals(100, battleStats.get("healing"));
+        
         assertEquals(2580, enemy1.getPlayerStats().getStat("health", null));
         assertEquals(4100, player.getPlayerStats().getStat("health", null));
 
