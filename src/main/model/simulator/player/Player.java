@@ -138,10 +138,43 @@ public class Player {
         currentHand.add(spells.get(random));
     }
 
+    // EFFECTS: returns true if player's mana < spell's required mana
+    private boolean insufficientMana(Spell spell) {
+        return stats.getStat("mana", null) < spell.getRequiredMana();
+    }
+
+    // EFFECTS: returns false if player's pips < spell's required pips
+    private boolean insufficientPips(Spell spell) {
+        return pips < spell.getRequiredPips();
+    }
+
+    // EFFECTS: returns true if total accuracy (from spell + player) expressed as
+    // percentage < random decimal in range [0, 1], or
+    // if total accuracy == 0
+    // randomCast is a random double in range [0, 1]
+    public boolean fizzle(Spell spell, double randomCast) {
+        double accuracy = (double) (spell.getAccuracy()
+                + stats.getStat("accuracy", spell.getSchool())) / 100.0;
+        return accuracy < randomCast || accuracy == 0;
+    }
+
+    // EFFECTS: returns true if player has insufficient pips, insufficient
+    // mana, or spell fizzles
+    public boolean invalidCast(Spell spell) {
+        return fizzle(spell, Math.random()) || insufficientMana(spell) || insufficientPips(spell);
+    }
+
+    // EFFECTS: initializes battleStats with 0 damage and healing
+    private void initBattleStats(HashMap<String, Double> battleStats) {
+        battleStats.put("damage", 0.0);
+        battleStats.put("healing", 0.0);
+    }
+
     // REQUIRES: spell is in current hand, and this player has sufficient mana and
     // pips
     // MODIFIES: this
-    // EFFECTS: if spell's aoe == false, casts spell on first enemy,
+    // EFFECTS: returns empty battleStats if cast is invalid
+    // if spell's aoe == false, casts spell on first enemy,
     // else if spell's aoe == true, casts spell on all enemies
     // - updates currentHand and subtracts spell's required pips from pips
     // the gear calculator is used to calculate boost rates for outgoing damage, and
@@ -149,10 +182,14 @@ public class Player {
     // - deducts spell's required mana and pips from player
     public HashMap<String, Double> castSpell(Spell spell) {
         HashMap<String, Double> battleStats = new HashMap<>();
+        initBattleStats(battleStats);
+
+        if (invalidCast(spell))
+            return battleStats;
 
         if (spell.getAoe() == true) {
             for (Player enemy : enemies) {
-                battleStats.put("damage", battleStats.getOrDefault("damage", 0.0) + (double) doDamage(spell, enemy));
+                battleStats.put("damage", battleStats.get("damage") + (double) doDamage(spell, enemy));
             }
         } else {
             battleStats.put("damage", (double) doDamage(spell, enemies.get(enemies.size() - 1)));
@@ -255,6 +292,10 @@ public class Player {
             return (double) wards.get(school).remove(0) / 100;
         }
         return 0;
+    }
+
+    public void setStat(String type, String school, int boost) {
+        stats.setStat(type, school, boost);
     }
 
     public void updateStats(String type, String school, int boost) {

@@ -18,7 +18,8 @@ public class PlayerStats {
     }
 
     // MODIFIES: this
-    // EFFECTS: if type is "health", "mana", or "power pip", adds boost to this boost
+    // EFFECTS: if type is "health", "mana", or "power pip", adds boost to this
+    // boost
     // to boost
     // else if stat associated with type and school do not already exist in
     // playerStats,
@@ -98,6 +99,18 @@ public class PlayerStats {
             return stat.get(school);
         } else {
             return 0;
+        }
+    }
+
+    public void setStat(String type, String school, int boost) {
+        if (type == "health") {
+            health = boost;
+        } else if (type == "mana") {
+            mana = boost;
+        } else {
+            HashMap<String, Integer> stat = new HashMap<>();
+            stat.put(school, boost);
+            playerStats.put(type, stat);
         }
     }
 }

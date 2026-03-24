@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class PlayerTest {
     private Player enemy2;
     private Spell spell1;
     private Spell spell2;
+    private Spell stormSpell1;
+    Spell noAccuracy;
 
     @BeforeEach
     void runBefore() {
@@ -26,6 +29,8 @@ public class PlayerTest {
         enemy2 = new Player(90, 2000, 1000);
         spell1 = new Spell("spell1", "life", 300, 100, 70, 50, 5, 10, 100, true);
         spell2 = new Spell("spell2", "death", 1000, 0, 0, 65, 7, 10, 100, false);
+        stormSpell1 = new Spell("Storm Shark", "storm", 500, 0, 0, 0, 3, 10, 70, false);
+        noAccuracy = new Spell("fizzle", "life", 0, 0, 0, 0, 0, 0, 0, false);
     }
 
     @Test
@@ -165,6 +170,39 @@ public class PlayerTest {
     }
 
     @Test
+    void testFizzleNoAccuracy() {
+        player.updateStats("accuracy", "life", 0);
+        assertEquals(0, player.getPlayerStats().getStat("accuracy", "life"));
+        assertTrue(player.fizzle(noAccuracy, Math.random()));
+    }
+
+    @Test
+    void testFizzleNoFizzle() {
+        Spell lifeSpell1 = new Spell("Leprechaun", "life", 300, 0, 0, 0, 3, 10, 95, false);
+        player.updateStats("accuracy", "life", 10);
+        assertFalse(player.fizzle(lifeSpell1, Math.random()));
+    }
+
+    @Test
+    void testFizzlePossibleFizzleNoFizzle() {
+        assertFalse(player.fizzle(stormSpell1, 0.7));
+        assertFalse(player.fizzle(stormSpell1, 0.69));
+    }
+
+    @Test
+    void testFizzlePossibleFizzleWillFizzle() {
+        assertTrue(player.fizzle(stormSpell1, 0.71));
+        assertTrue(player.fizzle(stormSpell1, 0.9));
+    }
+
+    @Test
+    void testCastFizzle() {
+        HashMap<String, Double> battleStats = player.castSpell(noAccuracy);
+        assertEquals(battleStats.get("damage"), 0.0);
+        assertEquals(battleStats.get("healing"), 0.0);
+    }
+
+    @Test
     void testCastSpellOneEnemyNoAoe() {
         enemy1.getPlayerStats().updateStats("resist", "life", 10);
         player.getPlayerStats().updateStats("pierce", "life", 50);
@@ -173,7 +211,7 @@ public class PlayerTest {
         player.addSpell(spell1);
 
         player.addPips(Player.MAX_PIPS);
-        
+
         assertEquals(14, player.getPips());
         player.updateHand(null);
         HashMap<String, Double> battleStats = player.castSpell(spell1);
@@ -183,7 +221,7 @@ public class PlayerTest {
 
         assertEquals(420, battleStats.get("damage"));
         assertEquals(100, battleStats.get("healing"));
-        
+
         assertEquals(2580, enemy1.getPlayerStats().getStat("health", null));
         assertEquals(4100, player.getPlayerStats().getStat("health", null));
 
@@ -262,10 +300,11 @@ public class PlayerTest {
         player.addSpell(spell1);
 
         enemy1.addEnemy(player);
-        Spell lifeShield = new Spell("life shield", "life", 0, 0, 75, 0, 0, 0, 0, false);
+        Spell lifeShield = new Spell("life shield", "life", 0, 0, 75, 0, 0, 0, 100, false);
         enemy1.addSpell(lifeShield);
 
         player.addPips(Player.MAX_PIPS);
+        enemy1.addPips(Player.MAX_PIPS);
         assertEquals(14, player.getPips());
 
         player.updateHand(null);
@@ -283,9 +322,15 @@ public class PlayerTest {
         assertEquals(4100, player.getPlayerStats().getStat("health", null));
 
         enemy1.castSpell(lifeShield);
+
+        int manaBoost = 10000;
+        player.setStat("mana", null, manaBoost);
+        player.addPips(spell1.getRequiredPips() - player.getPips());
         player.castSpell(spell1);
-        
+
         assertEquals(460, enemy1.getPlayerStats().getStat("health", null));
         assertEquals(4200, player.getPlayerStats().getStat("health", null));
+        assertEquals(0, player.getPips());
+        assertEquals(player.getPlayerStats().getStat("mana", null), manaBoost - spell1.getRequiredMana());
     }
 }

@@ -17,27 +17,6 @@ public class Simulator {
         gear = new PlayerGear(mainPlayer);
     }
 
-    // EFFECTS: returns true if total accuracy (from spell + player) expressed as
-    // percentage < random decimal in range [0, 1], or
-    // if total accuracy == 0
-    // randomCast is a random double in range [0, 1]
-    public boolean fizzle(Player player, Spell spell, double randomCast) {
-        double accuracy = (double) (spell.getAccuracy()
-                + player.getPlayerStats().getStat("accuracy", spell.getSchool())) / 100.0;
-        return accuracy < randomCast || accuracy == 0;
-    }
-
-    // EFFECTS: returns true if player's mana < spell's required mana
-    private boolean insufficientMana(Player player, Spell spell) {
-        return player.getPlayerStats().getStat("mana", null) < spell.getRequiredMana();
-    }
-
-    // EFFECTS: returns false if player's pips < spell's required pips
-    private boolean insufficientPips() {
-        // TODO
-        return false;
-    }
-
     // EFFECTS: updates pips of player
     private void updatePips(Player player) {
         if (player.getPips() == Player.MAX_PIPS) {
@@ -79,9 +58,8 @@ public class Simulator {
         }
     }
 
-
     // EFFECTS: mainPlayer casts a random spell, updating battleStats
-    private void castMainPlayer (HashMap<String, Double> battleStats) {
+    private void castMainPlayer(HashMap<String, Double> battleStats) {
         HashMap<String, Double> playerCastStats = mainPlayer.castRandom();
         double playerDamage = playerCastStats.get("damage");
         double playerHealing = playerCastStats.get("healing");
@@ -94,7 +72,6 @@ public class Simulator {
         }
     }
 
-
     // EFFECTS: all enemies and main player cast a random spell from their deck,
     // update battleStats
     private void castEnemies(HashMap<String, Double> battleStats) {
@@ -103,7 +80,6 @@ public class Simulator {
             battleStats.put("damage received", battleStats.getOrDefault("damage received", 0.0) + enemyDamage);
         }
     }
-
 
     // EFFECTS: simulates 1 round of battle, updating summary stats
     // 1. adds pip/power pip to all of main player and enemies

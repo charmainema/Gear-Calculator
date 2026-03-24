@@ -36,32 +36,6 @@ public class SimulatorTest {
     }
 
     @Test
-    void testFizzleNoAccuracy() {
-        Spell noAccuracy = new Spell("fizzle", "life", 0, 0, 0, 0, 0, 0, 0, false);
-        sim.getMainPlayer().updateStats("accuracy", "life", 0);
-        assertEquals(0, sim.getMainPlayer().getPlayerStats().getStat("accuracy", "life"));
-        assertTrue(sim.fizzle(sim.getMainPlayer(), noAccuracy, Math.random()));
-    }
-
-    @Test
-    void testFizzleNoFizzle() {
-        sim.getMainPlayer().updateStats("accuracy", "life", 10);
-        assertFalse(sim.fizzle(sim.getMainPlayer(), lifeSpell1, Math.random()));
-    }
-
-    @Test
-    void testFizzlePossibleFizzleNoFizzle() {
-        assertFalse(sim.fizzle(sim.getMainPlayer(), stormSpell1, 0.7));
-        assertFalse(sim.fizzle(sim.getMainPlayer(), stormSpell1, 0.69));
-    }
-
-    @Test
-    void testFizzlePossibleFizzleWillFizzle() {
-        assertTrue(sim.fizzle(sim.getMainPlayer(), stormSpell1, 0.71));
-        assertTrue(sim.fizzle(sim.getMainPlayer(), stormSpell1, 0.9));
-    }
-
-    @Test
     void testSetGear() {
         ArrayList<GearItem> gearItems = new ArrayList<>();
 
