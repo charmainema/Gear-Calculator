@@ -172,7 +172,7 @@ public class PlayerTest {
     @Test
     void testFizzleNoAccuracy() {
         player.updateStats("accuracy", "life", 0);
-        assertEquals(0, player.getPlayerStats().getStat("accuracy", "life"));
+        assertEquals(0, player.getStat("accuracy", "life"));
         assertTrue(player.fizzle(noAccuracy, Math.random()));
     }
 
@@ -204,8 +204,8 @@ public class PlayerTest {
 
     @Test
     void testCastSpellOneEnemyNoAoe() {
-        enemy1.getPlayerStats().updateStats("resist", "life", 10);
-        player.getPlayerStats().updateStats("pierce", "life", 50);
+        enemy1.updateStats("resist", "life", 10);
+        player.updateStats("pierce", "life", 50);
 
         player.addEnemy(enemy1);
         player.addSpell(spell1);
@@ -222,8 +222,8 @@ public class PlayerTest {
         assertEquals(420, battleStats.get("damage"));
         assertEquals(100, battleStats.get("healing"));
 
-        assertEquals(2580, enemy1.getPlayerStats().getStat("health", null));
-        assertEquals(4100, player.getPlayerStats().getStat("health", null));
+        assertEquals(2580, enemy1.getStat("health", null));
+        assertEquals(4100, player.getStat("health", null));
 
         assertTrue(shields.containsKey("life"));
         assertEquals(1, shields.get("life").size());
@@ -238,9 +238,9 @@ public class PlayerTest {
 
     @Test
     void testCastSpellAoe() {
-        enemy1.getPlayerStats().updateStats("resist", "life", 10);
-        enemy2.getPlayerStats().updateStats("resist", "life", 10);
-        player.getPlayerStats().updateStats("pierce", "life", 50);
+        enemy1.updateStats("resist", "life", 10);
+        enemy2.updateStats("resist", "life", 10);
+        player.updateStats("pierce", "life", 50);
 
         player.addEnemy(enemy1);
         player.addEnemy(enemy2);
@@ -255,9 +255,9 @@ public class PlayerTest {
         HashMap<String, ArrayList<Integer>> shields = player.getShields();
         HashMap<String, ArrayList<Integer>> wards = player.getWards();
 
-        assertEquals(2580, enemy1.getPlayerStats().getStat("health", null));
-        assertEquals(1580, enemy2.getPlayerStats().getStat("health", null));
-        assertEquals(4100, player.getPlayerStats().getStat("health", null));
+        assertEquals(2580, enemy1.getStat("health", null));
+        assertEquals(1580, enemy2.getStat("health", null));
+        assertEquals(4100, player.getStat("health", null));
 
         assertTrue(shields.containsKey("life"));
         assertEquals(1, shields.get("life").size());
@@ -272,9 +272,9 @@ public class PlayerTest {
 
     @Test
     void testCastSpellCrit() {
-        enemy1.getPlayerStats().updateStats("resist", "life", 10);
-        player.getPlayerStats().updateStats("pierce", "life", 50);
-        player.getPlayerStats().updateStats("critical", "life", 100);
+        enemy1.updateStats("resist", "life", 10);
+        player.updateStats("pierce", "life", 50);
+        player.updateStats("critical", "life", 100);
 
         player.addEnemy(enemy1);
         player.addSpell(spell1);
@@ -284,17 +284,17 @@ public class PlayerTest {
         player.updateHand(null);
         player.castSpell(spell1);
 
-        assertEquals(2160, enemy1.getPlayerStats().getStat("health", null));
-        assertEquals(4100, player.getPlayerStats().getStat("health", null));
+        assertEquals(2160, enemy1.getStat("health", null));
+        assertEquals(4100, player.getStat("health", null));
     }
 
     @Test
     void testCastSpellMultipleSpells() {
         // spell("spell2", "death", 1000, 0, 0, 65, 7, 10, 100, false);
-        enemy1.getPlayerStats().updateStats("resist", "life", 10);
-        player.getPlayerStats().updateStats("pierce", "life", 50);
-        player.getPlayerStats().updateStats("critical", "life", 100);
-        player.getPlayerStats().updateStats("damage", "death", 1);
+        enemy1.updateStats("resist", "life", 10);
+        player.updateStats("pierce", "life", 50);
+        player.updateStats("critical", "life", 100);
+        player.updateStats("damage", "death", 1);
 
         player.addEnemy(enemy1);
         player.addSpell(spell1);
@@ -318,8 +318,8 @@ public class PlayerTest {
         player.addSpell(spell1);
         player.castSpell(spell2);
 
-        assertEquals(1150, enemy1.getPlayerStats().getStat("health", null));
-        assertEquals(4100, player.getPlayerStats().getStat("health", null));
+        assertEquals(1150, enemy1.getStat("health", null));
+        assertEquals(4100, player.getStat("health", null));
 
         enemy1.castSpell(lifeShield);
 
@@ -328,10 +328,10 @@ public class PlayerTest {
         player.addPips(spell1.getRequiredPips() - player.getPips());
         player.castSpell(spell1);
 
-        assertEquals(460, enemy1.getPlayerStats().getStat("health", null));
+        assertEquals(460, enemy1.getStat("health", null));
 
-        assertEquals(4200, player.getPlayerStats().getStat("health", null));
+        assertEquals(4200, player.getStat("health", null));
         assertEquals(0, player.getPips());
-        assertEquals(player.getPlayerStats().getStat("mana", null), manaBoost - spell1.getRequiredMana());
+        assertEquals(player.getStat("mana", null), manaBoost - spell1.getRequiredMana());
     }
 }

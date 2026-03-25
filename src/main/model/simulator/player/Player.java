@@ -179,7 +179,7 @@ public class Player {
     // EFFECTS: checks and sets player's isDead field if player's health <= 0
     // removes dead player from enemies, and removes this player as an enemy from player
     private void checkPlayerDead(Player player) {
-        if (player.getPlayerStats().getStat("health", null) <= 0) {
+        if (player.getStat("health", null) <= 0) {
             player.setDead(true);
             player.removeEnemy(this);
             removeEnemy(player);
@@ -264,7 +264,7 @@ public class Player {
         double critMultiplier = castCritical(spellSchool, enemy);
         int totalDamage = Math.max((int) (critMultiplier * boostedDamage), 0);
 
-        enemy.getPlayerStats().updateStats("health", null, totalDamage * -1);
+        enemy.updateStats("health", null, totalDamage * -1);
 
         return totalDamage;
     }
@@ -273,7 +273,7 @@ public class Player {
     private double getPierceMultiplier(String spellSchool, Player enemy) {
         int pierce = stats.getStat("pierce", spellSchool);
         int enemyShield = enemy.getShieldFactor(spellSchool);
-        int enemyResist = enemy.getPlayerStats().getStat("resist", spellSchool);
+        int enemyResist = enemy.getStat("resist", spellSchool);
         return calculator.calculatePierceMultiplier(pierce - enemyResist - enemyShield);
     }
 
@@ -283,10 +283,10 @@ public class Player {
     // otherwise returns 0.0
     private double castCritical(String spellSchool, Player enemy) {
         double critChance = Math.pow(calculator.calculateCritChanceMultiplier(stats.getStat("critical", spellSchool),
-                enemy.getPlayerStats().getStat("block", spellSchool), level), 2);
+                enemy.getStat("block", spellSchool), level), 2);
         double randomCrit = Math.random();
         double critMultiplier = calculator.calculateCritDmgMultiplier(stats.getStat("critical", spellSchool),
-                enemy.getPlayerStats().getStat("block", spellSchool));
+                enemy.getStat("block", spellSchool));
 
         if (randomCrit < critChance) {
             return critMultiplier;
@@ -329,8 +329,8 @@ public class Player {
         return level;
     }
 
-    public PlayerStats getPlayerStats() {
-        return stats;
+    public int getStat(String type, String school) {
+        return stats.getStat(type, school);
     }
 
     public ArrayList<Spell> getSpells() {

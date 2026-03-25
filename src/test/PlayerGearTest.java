@@ -87,9 +87,9 @@ public class PlayerGearTest {
         assertEquals(pet, gear.getPet());
         assertEquals(mount, gear.getMount());
 
-        assertEquals(300, player.getPlayerStats().getStat("damage", "life"));
-        assertEquals(30, player.getPlayerStats().getStat("resist", "fire"));
-        assertEquals(1224, player.getPlayerStats().getStat("health", null));
+        assertEquals(300, player.getStat("damage", "life"));
+        assertEquals(30, player.getStat("resist", "fire"));
+        assertEquals(1224, player.getStat("health", null));
     }
 
     private void initStats() {

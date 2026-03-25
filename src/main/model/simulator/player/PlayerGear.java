@@ -25,18 +25,18 @@ public class PlayerGear {
     // MODIFIES: this
     // EFFECTS: updates stats for all stat boosts in item
     private void updateStats(GearItem item) {
-        PlayerStats stats = player.getPlayerStats();
+        // PlayerStats stats = player.getPlayerStats();
         for (StatBoost boost : item.getStatBoosts()) {
-            stats.updateStats(boost.getType(), boost.getSchool(), boost.getBoost());
+            player.updateStats(boost.getType(), boost.getSchool(), boost.getBoost());
         }
     }
 
     // MODIFIES: this
     // EFFECTS: sets item to null and removes stat boosts
     public void unequip(GearItem item) {
-        PlayerStats stats = player.getPlayerStats();
+        // PlayerStats stats = player.getPlayerStats();
         for (StatBoost boost : item.getStatBoosts()) {
-            stats.updateStats(boost.getType(), boost.getSchool(), boost.getBoost() * -1);
+            player.updateStats(boost.getType(), boost.getSchool(), boost.getBoost() * -1);
         }
 
         item.removeItem(this);

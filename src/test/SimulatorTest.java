@@ -58,8 +58,8 @@ public class SimulatorTest {
         
         sim.setGear(gearItems);
 
-        assertEquals(50, sim.getMainPlayer().getPlayerStats().getStat("pierce", "life"));
-        assertEquals(30, sim.getMainPlayer().getPlayerStats().getStat("resist", "ice"));
+        assertEquals(50, sim.getMainPlayer().getStat("pierce", "life"));
+        assertEquals(30, sim.getMainPlayer().getStat("resist", "ice"));
     }
 
     @Test
@@ -105,10 +105,10 @@ public class SimulatorTest {
         assertEquals(0, battleStats.get("total healing"));
         assertEquals(0, battleStats.get("total blocked"));
 
-        assertEquals(3990, sim.getMainPlayer().getPlayerStats().getStat("health", null));
+        assertEquals(3990, sim.getMainPlayer().getStat("health", null));
         assertFalse(sim.getMainPlayer().isDead());
 
-        assertEquals(-1100, enemy.getPlayerStats().getStat("health", null));
+        assertEquals(-1100, enemy.getStat("health", null));
         assertTrue(enemy.isDead());
         assertEquals(0, sim.getEnemies().size());
         assertEquals(0, enemy.getEnemies().size());
